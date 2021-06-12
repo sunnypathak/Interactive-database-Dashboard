@@ -52,10 +52,11 @@ const DataTableView = {
 const PaginationView = {
   view: (vnode) => {
     const { elementInd } = vnode.attrs;
-    const lastPage = Math.ceil(
+    let lastPage = Math.ceil(
       DataHelper.pagination[elementInd].totalRecords /
         DataHelper.pagination[elementInd].recordsPerPage
     );
+    lastPage = lastPage != 0 ? lastPage : 1;
     return m("div", { id: "pagination-div" }, [
       m("div", { id: "prev-div" }, [
         m("span", { onclick: () => DataHelper.getFirstPage(elementInd) }, "|<"),
@@ -89,6 +90,12 @@ const DataTable = {
       DataHelper.pagination.push(paginationObj);
     } else {
       DataHelper.pagination[elementInd].totalRecords = rowElement.length;
+      if (
+        DataHelper.pagination[elementInd].totalRecords <
+        DataHelper.pagination[elementInd].recordsPerPage
+      ) {
+        DataHelper.pagination[elementInd].currentPage = 1;
+      }
     }
 
     const paginatedArr = DataHelper.getDataForCurrentPage(
