@@ -49,6 +49,7 @@ const DataHelper = {
       value: value,
     });
     DataHelper.filterApplied = true;
+
     const keyName = columnName.split(" ").join("_");
     const tempDataArr = DataHelper.filteredData.map((arrElement) => {
       if (arrElement.length > 0 && arrElement[0][keyName]) {
