@@ -5,11 +5,30 @@ const DataHelper = {
   pagination: [],
   filterApplied: false,
   getDataForCurrentPage: (arr, arrInd) => {
-    const lastIndex =
+    let lastIndex =
       DataHelper.pagination[arrInd].currentPage *
       DataHelper.pagination[arrInd].recordsPerPage;
-    const fromIndex = lastIndex - DataHelper.pagination[arrInd].recordsPerPage;
-    if (lastIndex > DataHelper.pagination[arrInd].totalRecords) return arr;
+    lastIndex =
+      lastIndex > DataHelper.pagination[arrInd].totalRecords
+        ? DataHelper.pagination[arrInd].totalRecords - 1
+        : lastIndex;
+    const indMod =
+      DataHelper.pagination[arrInd].totalRecords %
+      DataHelper.pagination[arrInd].recordsPerPage;
+    let fromIndex = lastIndex - DataHelper.pagination[arrInd].recordsPerPage;
+    let lastPage = Math.ceil(
+      DataHelper.pagination[arrInd].totalRecords /
+        DataHelper.pagination[arrInd].recordsPerPage
+    );
+    let lastPageFlg = DataHelper.pagination[arrInd].currentPage === lastPage;
+    if (indMod == 0) {
+      fromIndex = lastIndex - DataHelper.pagination[arrInd].recordsPerPage;
+    } else if (lastPageFlg) {
+      fromIndex = lastIndex - indMod;
+    }
+
+    fromIndex = fromIndex > 0 ? fromIndex : 0;
+    if (arr.length == 1) return arr;
     return arr.slice(fromIndex, lastIndex);
   },
 
