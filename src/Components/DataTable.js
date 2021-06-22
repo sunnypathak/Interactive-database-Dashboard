@@ -6,38 +6,35 @@ const DataTableView = {
     if (rowElement.length > 0) {
       headers = DataHelper.getHeader(Object.keys(rowElement[0]));
     } else {
-      headers = DataHelper.getHeader(
-        Object.keys(DataHelper.data[elementInd][0])
-      );
-      return m("table", { id: "data_table" }, [
+      headers = DataHelper.getHeader(Object.keys(StaticData[elementInd][0]));
+      return m('table', { id: 'data_table' }, [
         m(
-          "tr",
+          'tr',
           headers.map((header) => {
-            return m("th.ba", header);
+            return m('th.ba', header);
           })
         ),
       ]);
     }
 
     return m(
-      "table",
-      { id: "data_table" },
+      'table',
+      { id: 'data_table' },
       rowElement.map((rowObj, index) => {
-        return m("tbody", [
+        return m('tbody', [
           index == 0
             ? headers.map((header) => {
-                return m("th", header);
+                return m('th', header);
               })
             : null,
           rowsExist &&
             m(
-              "tr",
+              'tr',
               Object.values(rowObj).map((rowEl, index) => {
                 return m(
-                  "td",
+                  'td',
                   {
-                    onclick: () =>
-                      DataHelper.getFilteredData(headers[index], rowEl),
+                    onclick: () => DataHelper.getFilteredData(headers, rowObj,index),
                   },
                   rowEl
                 );
@@ -57,23 +54,34 @@ const PaginationView = {
         DataHelper.pagination[elementInd].recordsPerPage
     );
     lastPage = lastPage != 0 ? lastPage : 1;
-    return m("div", { id: "pagination-div" }, [
-      m("div", { id: "prev-div" }, [
-        m("span", { onclick: () => DataHelper.getFirstPage(elementInd) }, "|<"),
-        m("span", { onclick: () => DataHelper.getPrevPage(elementInd) }, "<"),
+    return m('div', { id: 'pagination-div' }, [
+      m('div', { id: 'prev-div' }, [
+        m('span', { onclick: () => DataHelper.getFirstPage(elementInd) }, '|<'),
+        m('span', { onclick: () => DataHelper.getPrevPage(elementInd) }, '<'),
       ]),
       m(
-        "div",
-        { id: "page-info" },
-        "Page " +
+        'div',
+        { id: 'page-info' },
+        'Page ' +
           DataHelper.pagination[elementInd].currentPage +
-          " of " +
+          ' of ' +
           lastPage
       ),
-      m("div", { id: "next-div" }, [
-        m("span", { onclick: () => DataHelper.getNextPage(elementInd) }, ">"),
-        m("span", { onclick: () => DataHelper.getLastPage(elementInd) }, ">|"),
+      m('div', { id: 'next-div' }, [
+        m('span', { onclick: () => DataHelper.getNextPage(elementInd) }, '>'),
+        m('span', { onclick: () => DataHelper.getLastPage(elementInd) }, '>|'),
       ]),
+    ]);
+  },
+};
+
+const SelectTile = {
+  view: (vnode) => {
+    const { elementInd } = vnode.attrs;
+    return m('div', { class: `checkbox-div` }, [
+      m('span', [m('b', 'SELECT')]),
+      m('input', { type: 'checkbox', id: `select-${elementInd}` }),
+      m('br'),
     ]);
   },
 };
@@ -102,8 +110,9 @@ const DataTable = {
       rowElement,
       elementInd
     );
-    return m("div", [
+    return m('div', [
       m(PaginationView, { elementInd: elementInd }),
+      m(SelectTile, { elementInd: elementInd }),
       m(DataTableView, {
         rowElement: paginatedArr,
         elementInd: elementInd,

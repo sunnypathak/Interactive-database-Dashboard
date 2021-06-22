@@ -72,3 +72,11 @@
   width: 35%;
   margin: auto;
 }
+
+.checkbox-div {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-evenly;
+  width: 30%;
+}
